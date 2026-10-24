@@ -153,7 +153,13 @@ function Login({ onLogin }) {
 
           <span>
             <strong>ParkSaathi</strong>
-            <small>SMART VEHICLE ASSISTANCE</small>
+            <a
+              href="/#home"
+              rel="noopener noreferrer"
+              className="ps-login__landing-link"
+            >
+              SMART VEHICLE ASSISTANCE ↗
+            </a>
           </span>
         </div>
 
@@ -259,8 +265,8 @@ function Login({ onLogin }) {
                 setIdentifier(
                   role === 'member'
                     ? event.target.value
-                        .replace(/\D/g, '')
-                        .slice(0, 10)
+                      .replace(/\D/g, '')
+                      .slice(0, 10)
                     : event.target.value
                 );
               }}

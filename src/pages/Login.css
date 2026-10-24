@@ -1060,3 +1060,17 @@
     padding: 10px;
   }
 }
+
+.ps-login__landing-link {
+  display: inline-block;
+  margin-top: 4px;
+  color: whitesmoke;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.ps-login__landing-link:hover {
+  color: #245bd4;
+  text-decoration: underline;
+}

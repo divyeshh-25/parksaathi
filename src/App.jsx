@@ -17,6 +17,7 @@ import { Toaster } from 'react-hot-toast';
 import Sidebar from './components/layout/Sidebar.jsx';
 import Header from './components/layout/Header.jsx';
 
+import Home from './pages/Home.jsx';
 import Vehicles from './pages/Vehicles.jsx';
 import ScanDemo from './pages/ScanDemo.jsx';
 import QRCodes from './pages/QRCodes.jsx';
@@ -37,6 +38,7 @@ import './App.css';
 import './pages/Vehicles.css';
 
 const pageTitles = {
+  home: 'Home',
   overview: 'Overview',
   vehicles: 'Vehicles',
   residents: 'Residents',
@@ -164,9 +166,19 @@ function getActiveItem() {
     .split('?')[0]
     .toLowerCase();
 
-  return pageTitles[hash] ? hash : 'overview';
-}
+  // Handle login route explicitly
+  if (hash === 'login') {
+    return 'login';
+  }
 
+  if (pageTitles[hash]) {
+    return hash;
+  }
+
+  // Show landing page to visitors without a session
+  // Authenticated users retain the existing dashboard
+  return getSession() ? 'overview' : 'home';
+}
 function App() {
   const [session, setSession] = useState(getSession);
 
@@ -676,6 +688,9 @@ function App() {
    * Show Login when the user has no session.
    */
   if (!session) {
+    if (!session && activeItem === 'home') {
+      return <Home />;
+    }
     return (
       <>
         <Login onLogin={handleLogin} />
