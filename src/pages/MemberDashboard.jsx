@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+
 import {
   CarFront,
   UserRound,
@@ -25,6 +26,7 @@ function MemberDashboard({ session, onLogout }) {
 
   /*
    * Load vehicles belonging to the authenticated member.
+   * Generate QR codes only when the vehicle has an active QR token.
    */
   useEffect(() => {
     const controller = new AbortController();
@@ -65,12 +67,6 @@ function MemberDashboard({ session, onLogout }) {
 
         setVehicles(residentVehicles);
 
-        /*
-         * Generate QR codes.
-         *
-         * Prefer the permanent QR token when available.
-         * Fall back to vehicle ID for backward compatibility.
-         */
         const generatedImages = {};
 
         for (const vehicle of residentVehicles) {
@@ -80,31 +76,28 @@ function MemberDashboard({ session, onLogout }) {
 
           const vehicleId = vehicle.id ?? vehicle.public_id;
 
-          const qrToken =
-            vehicle.qr_token ??
-            vehicle.qrToken ??
-            null;
+          const qrToken = vehicle.qr_token ?? vehicle.qrToken ?? null;
 
           const qrStatus = String(
-            vehicle.qr_status ??
-              vehicle.qrStatus ??
-              'active',
+            vehicle.qr_status ?? vehicle.qrStatus ?? 'inactive',
           ).toLowerCase();
 
-          if (vehicleId == null || qrStatus !== 'active') {
+          /*
+           * Security:
+           * Only generate QR codes using a permanent QR token.
+           * Never fall back to a database vehicle ID.
+           */
+          if (
+            vehicleId == null ||
+            !qrToken ||
+            qrStatus !== 'active'
+          ) {
             continue;
           }
 
-          /*
-           * Do not skip QR generation just because qr_token
-           * is missing from the API response.
-           */
-          const qrParameter = qrToken
-            ? `token=${encodeURIComponent(qrToken)}`
-            : `vehicle=${encodeURIComponent(vehicleId)}`;
-
           const qrUrl =
-            `${window.location.origin}/#scan-demo?${qrParameter}`;
+            `${window.location.origin}/#scan-demo?token=` +
+            encodeURIComponent(qrToken);
 
           try {
             generatedImages[String(vehicleId)] =
@@ -129,10 +122,7 @@ function MemberDashboard({ session, onLogout }) {
           !controller.signal.aborted &&
           err.name !== 'AbortError'
         ) {
-          console.error(
-            'Failed to load member vehicles:',
-            err,
-          );
+          console.error('Failed to load member vehicles:', err);
 
           setError(
             err.message || 'Unable to load your vehicles.',
@@ -155,7 +145,7 @@ function MemberDashboard({ session, onLogout }) {
   ]);
 
   /*
-   * Download branded QR sticker.
+   * Download a branded QR sticker as a PNG image.
    */
   const downloadQr = async (vehicle) => {
     const vehicleId = String(
@@ -164,14 +154,14 @@ function MemberDashboard({ session, onLogout }) {
 
     const qrImage = qrImages[vehicleId];
 
+    const qrToken = vehicle.qr_token ?? vehicle.qrToken ?? null;
+
     const qrStatus = String(
-      vehicle.qr_status ??
-        vehicle.qrStatus ??
-        'active',
+      vehicle.qr_status ?? vehicle.qrStatus ?? 'inactive',
     ).toLowerCase();
 
-    if (qrStatus !== 'active') {
-      toast.error('This vehicle QR code is inactive.');
+    if (!qrToken || qrStatus !== 'active') {
+      toast.error('This vehicle does not have an active QR code.');
       return;
     }
 
@@ -187,24 +177,17 @@ function MemberDashboard({ session, onLogout }) {
       const ctx = canvas.getContext('2d');
 
       if (!ctx) {
-        throw new Error(
-          'Unable to create the QR sticker.',
-        );
+        throw new Error('Unable to create the QR sticker.');
       }
 
       canvas.width = 900;
       canvas.height = 1100;
 
-      // Background
+      // White background
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height,
-      );
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Border
+      // Blue border
       ctx.strokeStyle = '#2563eb';
       ctx.lineWidth = 8;
       ctx.strokeRect(20, 20, 860, 1060);
@@ -213,16 +196,10 @@ function MemberDashboard({ session, onLogout }) {
       ctx.fillStyle = '#2563eb';
       ctx.font = 'bold 58px Arial';
       ctx.textAlign = 'center';
-
-      ctx.fillText(
-        'PARKSAATHI',
-        450,
-        115,
-      );
+      ctx.fillText('PARKSAATHI', 450, 115);
 
       ctx.fillStyle = '#667085';
       ctx.font = '28px Arial';
-
       ctx.fillText(
         'SOCIETY VEHICLE IDENTIFICATION',
         450,
@@ -234,13 +211,7 @@ function MemberDashboard({ session, onLogout }) {
       image.onload = () => {
         try {
           // QR code
-          ctx.drawImage(
-            image,
-            250,
-            220,
-            400,
-            400,
-          );
+          ctx.drawImage(image, 250, 220, 400, 400);
 
           // Vehicle registration number
           const registrationNumber = String(
@@ -253,11 +224,7 @@ function MemberDashboard({ session, onLogout }) {
           ctx.font = 'bold 46px Arial';
           ctx.textAlign = 'center';
 
-          ctx.fillText(
-            registrationNumber,
-            450,
-            700,
-          );
+          ctx.fillText(registrationNumber, 450, 700);
 
           // Flat number
           const flatNumber = String(
@@ -269,22 +236,12 @@ function MemberDashboard({ session, onLogout }) {
 
           ctx.fillStyle = '#475467';
           ctx.font = '32px Arial';
-
-          ctx.fillText(
-            `Flat: ${flatNumber}`,
-            450,
-            755,
-          );
+          ctx.fillText(`Flat: ${flatNumber}`, 450, 755);
 
           // Scan instructions
           ctx.fillStyle = '#2563eb';
           ctx.font = 'bold 28px Arial';
-
-          ctx.fillText(
-            'SCAN QR CODE',
-            450,
-            850,
-          );
+          ctx.fillText('SCAN QR CODE', 450, 850);
 
           ctx.fillStyle = '#667085';
           ctx.font = '25px Arial';
@@ -301,20 +258,15 @@ function MemberDashboard({ session, onLogout }) {
             940,
           );
 
-          // Download PNG
+          // Create downloadable PNG
           canvas.toBlob((blob) => {
             if (!blob) {
-              toast.error(
-                'Unable to download the QR sticker.',
-              );
+              toast.error('Unable to download the QR sticker.');
               return;
             }
 
-            const objectUrl =
-              URL.createObjectURL(blob);
-
-            const link =
-              document.createElement('a');
+            const objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
 
             const safeRegistrationNumber =
               registrationNumber.replace(
@@ -323,7 +275,6 @@ function MemberDashboard({ session, onLogout }) {
               );
 
             link.href = objectUrl;
-
             link.download =
               `ParkSaathi-Sticker-${safeRegistrationNumber}.png`;
 
@@ -340,14 +291,9 @@ function MemberDashboard({ session, onLogout }) {
             );
           }, 'image/png');
         } catch (err) {
-          console.error(
-            'QR sticker creation failed:',
-            err,
-          );
+          console.error('QR sticker creation failed:', err);
 
-          toast.error(
-            'Unable to create the QR sticker.',
-          );
+          toast.error('Unable to create the QR sticker.');
         }
       };
 
@@ -359,22 +305,16 @@ function MemberDashboard({ session, onLogout }) {
 
       image.src = qrImage;
     } catch (err) {
-      console.error(
-        'QR download failed:',
-        err,
-      );
+      console.error('QR download failed:', err);
 
       toast.error(
-        err.message ||
-          'Unable to download the QR sticker.',
+        err.message || 'Unable to download the QR sticker.',
       );
     }
   };
 
   const getVehicleId = (vehicle) =>
-    String(
-      vehicle.id ?? vehicle.public_id ?? '',
-    );
+    String(vehicle.id ?? vehicle.public_id ?? '');
 
   const getRegistrationNumber = (vehicle) =>
     vehicle.registration_number ??
@@ -383,19 +323,14 @@ function MemberDashboard({ session, onLogout }) {
 
   const getQrStatus = (vehicle) =>
     String(
-      vehicle.qr_status ??
-        vehicle.qrStatus ??
-        'active',
+      vehicle.qr_status ?? vehicle.qrStatus ?? 'inactive',
     ).toLowerCase();
 
   return (
     <main className="ps-member">
       {/* Header */}
       <header className="ps-member__header">
-        <a
-          className="ps-member__brand"
-          href="#member"
-        >
+        <a className="ps-member__brand" href="#member">
           <span className="ps-member__brand-icon">
             <CarFront size={24} />
           </span>
@@ -424,13 +359,11 @@ function MemberDashboard({ session, onLogout }) {
             YOUR PERSONAL SPACE
           </span>
 
-          <h1>
-            Welcome, {session?.name || 'Member'}
-          </h1>
+          <h1>Welcome, {session?.name || 'Member'}</h1>
 
           <p>
-            Manage your profile and access QR codes for
-            your registered vehicles.
+            Manage your profile and access QR codes for your
+            registered vehicles.
           </p>
         </section>
 
@@ -445,9 +378,7 @@ function MemberDashboard({ session, onLogout }) {
               YOUR PROFILE
             </span>
 
-            <h2>
-              {session?.name || 'Member'}
-            </h2>
+            <h2>{session?.name || 'Member'}</h2>
 
             <div className="ps-member__profile-details">
               <span>
@@ -473,7 +404,6 @@ function MemberDashboard({ session, onLogout }) {
           <div className="ps-member__section-heading">
             <div>
               <h2>My Vehicles</h2>
-
               <p>
                 Your registered vehicles and their QR codes.
               </p>
@@ -481,9 +411,7 @@ function MemberDashboard({ session, onLogout }) {
 
             <span className="ps-member__count">
               {vehicles.length}{' '}
-              {vehicles.length === 1
-                ? 'vehicle'
-                : 'vehicles'}
+              {vehicles.length === 1 ? 'vehicle' : 'vehicles'}
             </span>
           </div>
 
@@ -529,27 +457,18 @@ function MemberDashboard({ session, onLogout }) {
               <h3>No vehicles found</h3>
 
               <p>
-                No vehicles are currently linked to your
-                resident profile. Please contact your
-                society administrator.
+                No vehicles are currently linked to your resident
+                profile. Please contact your society administrator.
               </p>
             </div>
           ) : (
             <div className="ps-member__grid">
               {vehicles.map((vehicle) => {
                 const id = getVehicleId(vehicle);
-
-                const number =
-                  getRegistrationNumber(vehicle);
-
-                const qrStatus =
-                  getQrStatus(vehicle);
-
-                const isActive =
-                  qrStatus === 'active';
-
-                const hasQR =
-                  Boolean(qrImages[id]);
+                const number = getRegistrationNumber(vehicle);
+                const qrStatus = getQrStatus(vehicle);
+                const isActive = qrStatus === 'active';
+                const hasQR = Boolean(qrImages[id]);
 
                 return (
                   <article
@@ -597,7 +516,7 @@ function MemberDashboard({ session, onLogout }) {
                           <span>
                             {!isActive
                               ? 'QR code inactive'
-                              : 'QR code unavailable'}
+                              : 'QR token unavailable'}
                           </span>
                         </div>
                       )}
@@ -615,7 +534,6 @@ function MemberDashboard({ session, onLogout }) {
 
                     <div className="ps-member__vehicle-note">
                       <ShieldCheck size={14} />
-
                       Keep your vehicle QR sticker accessible.
                     </div>
                   </article>

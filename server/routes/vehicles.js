@@ -131,6 +131,7 @@ router.get(
             v.vehicle_type,
             v.model,
             v.resident_id,
+            v.qr_token,
             v.qr_status,
             v.created_at,
             v.updated_at

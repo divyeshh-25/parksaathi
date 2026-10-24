@@ -10,6 +10,9 @@ import {
   X,
   CheckCircle2,
   Ban,
+  LockKeyhole,
+  ArrowRight,
+  ShieldCheck,
 } from 'lucide-react';
 import { authFetch } from '../auth/auth.js';
 import Swal from 'sweetalert2';
@@ -47,7 +50,7 @@ function Residents() {
   const [form, setForm] = useState(emptyForm);
   const [error, setError] = useState('');
 
-  // Load residents from the Neon-backed API.
+  // Load residents from the API.
   useEffect(() => {
     const controller = new AbortController();
 
@@ -137,7 +140,7 @@ function Residents() {
     toast.error(message);
   };
 
-  // Add a new resident or update an existing resident.
+  // Add a resident or update an existing resident.
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
@@ -272,7 +275,7 @@ function Residents() {
     }
   };
 
-  // Activate or deactivate a resident using SweetAlert.
+  // Activate or deactivate a resident.
   const toggleStatus = async (resident) => {
     const nextStatus =
       resident.status === 'Active'
@@ -525,9 +528,7 @@ function Residents() {
                       <div className="residents-page__actions">
                         <button
                           type="button"
-                          onClick={() =>
-                            openEditForm(resident)
-                          }
+                          onClick={() => openEditForm(resident)}
                           aria-label={`Edit ${resident.name}`}
                           title="Edit resident"
                           disabled={saving}
@@ -537,9 +538,7 @@ function Residents() {
 
                         <button
                           type="button"
-                          onClick={() =>
-                            toggleStatus(resident)
-                          }
+                          onClick={() => toggleStatus(resident)}
                           aria-label={`Change status for ${resident.name}`}
                           title={
                             resident.status === 'Active'
@@ -559,17 +558,16 @@ function Residents() {
                   </tr>
                 ))}
 
-              {!loading &&
-                filteredResidents.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="residents-page__empty"
-                    >
-                      No residents found.
-                    </td>
-                  </tr>
-                )}
+              {!loading && filteredResidents.length === 0 && (
+                <tr>
+                  <td
+                    colSpan="5"
+                    className="residents-page__empty"
+                  >
+                    No residents found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -599,7 +597,7 @@ function Residents() {
                 </h2>
 
                 <p>
-                  Enter the society member's details.
+                  Enter the society member&apos;s details.
                 </p>
               </div>
 
@@ -668,6 +666,60 @@ function Residents() {
                   required
                 />
               </label>
+
+              {/* Temporary password information — Add mode only */}
+              {editingId === null && (
+                <aside
+                  className="residents-page__password-note"
+                  aria-label="Default temporary password information"
+                >
+                  <div className="residents-page__password-note-icon">
+                    <LockKeyhole size={21} />
+                  </div>
+
+                  <div className="residents-page__password-note-content">
+                    <div className="residents-page__password-note-heading">
+                      Default temporary password
+
+                      <span className="residents-page__password-note-badge">
+                        FIRST LOGIN
+                      </span>
+                    </div>
+
+                    <p>
+                      The first <strong>8 digits</strong> of the
+                      resident&apos;s mobile number will be used
+                      as their temporary password.
+                    </p>
+
+                    <div className="residents-page__password-note-example">
+                      <div className="residents-page__password-example-item">
+                        <span>Mobile number</span>
+                        <code>9876543210</code>
+                      </div>
+
+                      <ArrowRight
+                        size={17}
+                        className="residents-page__password-note-arrow"
+                      />
+
+                      <div className="residents-page__password-example-item">
+                        <span>Temporary password</span>
+                        <code>98765432</code>
+                      </div>
+                    </div>
+
+                    <div className="residents-page__password-note-reminder">
+                      <ShieldCheck size={16} />
+
+                      <span>
+                        The resident must change this password
+                        after their first login.
+                      </span>
+                    </div>
+                  </div>
+                </aside>
+              )}
 
               <label>
                 Membership status
