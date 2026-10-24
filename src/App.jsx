@@ -35,33 +35,6 @@ const pageTitles = {
   settings: 'Privacy Settings',
 };
 
-const demoVehicles = [
-  {
-    number: 'GJ01AB1234',
-    owner: 'Rahul Patel',
-    flat: 'A-101',
-    qrStatus: 'Generated',
-  },
-  {
-    number: 'GJ01CD5678',
-    owner: 'Amit Shah',
-    flat: 'B-204',
-    qrStatus: 'Generated',
-  },
-  {
-    number: 'GJ01EF9012',
-    owner: 'Priya Patel',
-    flat: 'C-302',
-    qrStatus: 'Pending',
-  },
-  {
-    number: 'GJ01GH3456',
-    owner: 'Neha Desai',
-    flat: 'A-305',
-    qrStatus: 'Generated',
-  },
-];
-
 const quickActions = [
   {
     label: 'Manage Vehicles',
@@ -89,6 +62,97 @@ const quickActions = [
   },
 ];
 
+/**
+ * Fetch JSON from the API.
+ * Gives a useful error if the server returns HTML instead of JSON.
+ */
+async function fetchJson(url) {
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/json',
+    },
+  });
+
+  const contentType = response.headers.get('content-type') || '';
+
+  if (!contentType.includes('application/json')) {
+    throw new Error(
+      `API returned a non-JSON response for ${url}. Check the Vercel API rewrite.`
+    );
+  }
+
+  const result = await response.json();
+
+  if (!response.ok || result?.success === false) {
+    throw new Error(
+      result?.message || `Request failed: ${response.status}`
+    );
+  }
+
+  return result;
+}
+
+/**
+ * Extract an array from a common API response structure.
+ *
+ * Supported examples:
+ * { success: true, data: [...] }
+ * { data: { data: [...] } }
+ * { vehicles: [...] }
+ */
+function extractArray(response, possibleKeys = []) {
+  if (Array.isArray(response)) {
+    return response;
+  }
+
+  if (Array.isArray(response?.data)) {
+    return response.data;
+  }
+
+  if (Array.isArray(response?.data?.data)) {
+    return response.data.data;
+  }
+
+  for (const key of possibleKeys) {
+    if (Array.isArray(response?.[key])) {
+      return response[key];
+    }
+
+    if (Array.isArray(response?.data?.[key])) {
+      return response.data[key];
+    }
+  }
+
+  return [];
+}
+
+/**
+ * Extract privacy settings from common API response structures.
+ */
+function extractPrivacySettings(response) {
+  if (!response) {
+    return null;
+  }
+
+  if (response?.data && !Array.isArray(response.data)) {
+    if (response.data.privacy_settings) {
+      return response.data.privacy_settings;
+    }
+
+    if (response.data.settings) {
+      return response.data.settings;
+    }
+
+    return response.data;
+  }
+
+  if (response?.settings) {
+    return response.settings;
+  }
+
+  return response;
+}
+
 function App() {
   const getActiveItem = () => {
     const hash = window.location.hash
@@ -102,7 +166,72 @@ function App() {
   const [activeItem, setActiveItem] = useState(getActiveItem);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Update the active page when the URL hash changes.
+  const [dashboardData, setDashboardData] = useState({
+    vehicles: [],
+    residents: [],
+    privacySettings: null,
+  });
+
+  const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [dashboardError, setDashboardError] = useState('');
+
+  /**
+   * Load dashboard information from the deployed API.
+   */
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchDashboardData = async () => {
+      setDashboardLoading(true);
+      setDashboardError('');
+
+      try {
+        const [vehiclesResponse, residentsResponse, privacyResponse] =
+          await Promise.all([
+            fetchJson('/api/vehicles'),
+            fetchJson('/api/residents'),
+            fetchJson('/api/privacy-settings'),
+          ]);
+
+        const vehicles = extractArray(vehiclesResponse, ['vehicles']);
+        const residents = extractArray(residentsResponse, ['residents']);
+        const privacySettings = extractPrivacySettings(privacyResponse);
+
+        if (cancelled) {
+          return;
+        }
+
+        setDashboardData({
+          vehicles,
+          residents,
+          privacySettings,
+        });
+      } catch (error) {
+        console.error('Dashboard loading error:', error);
+
+        if (!cancelled) {
+          setDashboardError(
+            error.message ||
+              'Unable to load dashboard data. Please try again.'
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setDashboardLoading(false);
+        }
+      }
+    };
+
+    fetchDashboardData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /**
+   * Update the active page when the URL hash changes.
+   */
   useEffect(() => {
     const handleHashChange = () => {
       setActiveItem(getActiveItem());
@@ -116,7 +245,9 @@ function App() {
     };
   }, []);
 
-  // Prevent background scrolling when the mobile sidebar is open.
+  /**
+   * Prevent background scrolling when the mobile sidebar is open.
+   */
   useEffect(() => {
     if (!sidebarOpen || window.innerWidth > 768) {
       document.body.style.overflow = '';
@@ -130,7 +261,9 @@ function App() {
     };
   }, [sidebarOpen]);
 
-  // Close the mobile sidebar with Escape.
+  /**
+   * Close the mobile sidebar with Escape.
+   */
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -147,179 +280,301 @@ function App() {
 
   const pageTitle = pageTitles[activeItem] || 'Overview';
 
+  const {
+    vehicles,
+    residents,
+    privacySettings,
+  } = dashboardData;
+
+  const registeredVehicles = vehicles.length;
+  const registeredResidents = residents.length;
+
+  const generatedQrCodes = vehicles.filter((vehicle) => {
+    const hasToken = Boolean(vehicle.qr_token);
+
+    const isActive =
+      String(vehicle.qr_status || '').toLowerCase() === 'active';
+
+    return hasToken && isActive;
+  }).length;
+
+  /**
+   * These settings are returned by the privacy-settings API.
+   * Support both snake_case and camelCase field names.
+   */
+  const privacyMode =
+    privacySettings?.privacy_mode ??
+    privacySettings?.privacyMode ??
+    false;
+
+  const allowQrScanning =
+    privacySettings?.allow_qr_scanning ??
+    privacySettings?.allowQrScanning ??
+    false;
+
+  const privacyEnabled =
+    Boolean(privacyMode) && Boolean(allowQrScanning);
+
   const stats = [
     {
       title: 'Registered Vehicles',
-      value: '128',
-      description: 'Vehicles in demo data',
+      value: dashboardLoading ? '...' : registeredVehicles,
+      description: 'Total registered vehicles',
       icon: CarFront,
       variant: 'blue',
     },
     {
       title: 'Registered Residents',
-      value: '96',
-      description: 'Residents in demo data',
+      value: dashboardLoading ? '...' : registeredResidents,
+      description: 'Total registered residents',
       icon: Users,
       variant: 'green',
     },
     {
       title: 'QR Codes Generated',
-      value: '115',
-      description: 'Vehicle QR stickers created',
+      value: dashboardLoading ? '...' : generatedQrCodes,
+      description: 'Active vehicle QR codes',
       icon: QrCode,
       variant: 'orange',
     },
     {
       title: 'Privacy Protection',
-      value: 'Enabled',
-      description: 'Member verification is active',
+      value: dashboardLoading
+        ? '...'
+        : privacyEnabled
+          ? 'Enabled'
+          : 'Disabled',
+      description: 'Based on current privacy settings',
       icon: ShieldCheck,
-      variant: 'green',
+      variant: privacyEnabled ? 'green' : 'orange',
     },
   ];
 
-  const renderOverview = () => (
-    <div className="dashboard">
-      <section className="dashboard__welcome">
-        <div>
-          <span className="dashboard__eyebrow">
-            SOCIETY OVERVIEW
+  /**
+   * Dashboard overview.
+   */
+  const renderOverview = () => {
+    const recentVehicles = [...vehicles]
+      .sort((a, b) => {
+        const dateA = new Date(a.created_at || 0).getTime();
+        const dateB = new Date(b.created_at || 0).getTime();
+
+        return dateB - dateA;
+      })
+      .slice(0, 5);
+
+    return (
+      <div className="dashboard">
+        <section className="dashboard__welcome">
+          <div>
+            <span className="dashboard__eyebrow">
+              SOCIETY OVERVIEW
+            </span>
+
+            <h1>Welcome to ParkSaathi 👋</h1>
+
+            <p>
+              Manage society vehicles, QR codes, and owner privacy
+              in one place.
+            </p>
+          </div>
+
+          <span className="dashboard__demo-badge">
+            {dashboardLoading
+              ? 'Loading live data...'
+              : dashboardError
+                ? 'Data unavailable'
+                : 'Live database'}
           </span>
+        </section>
 
-          <h1>Welcome to ParkSaathi 👋</h1>
-
-          <p>
-            Manage society vehicles, QR codes, and owner privacy in one place.
-          </p>
-        </div>
-
-        <span className="dashboard__demo-badge">
-          Demo data · Not live
-        </span>
-      </section>
-
-      <section className="dashboard__stats">
-        {stats.map((stat) => {
-          const Icon = stat.icon;
-
-          return (
-            <article
-              className="dashboard__stat-card"
-              key={stat.title}
-            >
-              <div className="dashboard__stat-top">
-                <span>{stat.title}</span>
-
-                <span
-                  className={`dashboard__stat-icon dashboard__stat-icon--${stat.variant}`}
-                >
-                  <Icon size={21} />
-                </span>
-              </div>
-
-              <h2>{stat.value}</h2>
-
-              <p>{stat.description}</p>
-            </article>
-          );
-        })}
-      </section>
-
-      <section className="dashboard__section">
-        <div className="dashboard__section-header">
-          <div>
-            <h2>Recent Vehicle Registrations</h2>
-            <p>Recently registered vehicles in your society.</p>
-          </div>
-
-          <a
-            href="#vehicles"
-            className="dashboard__view-all"
+        {dashboardError && (
+          <div
+            role="alert"
+            style={{
+              marginBottom: '20px',
+              padding: '14px 16px',
+              borderRadius: '12px',
+              background: '#fef3f2',
+              color: '#b42318',
+              border: '1px solid #fecdca',
+            }}
           >
-            View all <ArrowUpRight size={16} />
-          </a>
-        </div>
-
-        <div className="dashboard__table-wrapper">
-          <table className="dashboard__table">
-            <thead>
-              <tr>
-                <th>VEHICLE NUMBER</th>
-                <th>OWNER</th>
-                <th>FLAT NUMBER</th>
-                <th>QR STATUS</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {demoVehicles.map((vehicle) => (
-                <tr key={vehicle.number}>
-                  <td>
-                    <strong>{vehicle.number}</strong>
-                  </td>
-
-                  <td>{vehicle.owner}</td>
-
-                  <td>{vehicle.flat}</td>
-
-                  <td>
-                    <span
-                      className={`dashboard__status ${
-                        vehicle.qrStatus === 'Generated'
-                          ? 'dashboard__status--success'
-                          : 'dashboard__status--pending'
-                      }`}
-                    >
-                      {vehicle.qrStatus}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <section className="dashboard__section dashboard__quick-actions">
-        <div className="dashboard__section-header">
-          <div>
-            <h2>Quick Actions</h2>
-            <p>Access the main ParkSaathi features.</p>
+            <strong>Dashboard data could not be loaded.</strong>
+            <p style={{ margin: '6px 0 0' }}>
+              {dashboardError}
+            </p>
           </div>
-        </div>
+        )}
 
-        <div className="dashboard__actions-grid">
-          {quickActions.map((action) => {
-            const Icon = action.icon;
+        <section className="dashboard__stats">
+          {stats.map((stat) => {
+            const Icon = stat.icon;
 
             return (
-              <a
-                className="dashboard__action-card"
-                href={action.hash}
-                key={action.label}
+              <article
+                className="dashboard__stat-card"
+                key={stat.title}
               >
-                <span className="dashboard__action-icon">
-                  <Icon size={22} />
-                </span>
+                <div className="dashboard__stat-top">
+                  <span>{stat.title}</span>
 
-                <span className="dashboard__action-content">
-                  <strong>{action.label}</strong>
-                  <small>{action.description}</small>
-                </span>
+                  <span
+                    className={`dashboard__stat-icon dashboard__stat-icon--${stat.variant}`}
+                  >
+                    <Icon size={21} />
+                  </span>
+                </div>
 
-                <ArrowRight size={18} />
-              </a>
+                <h2>{stat.value}</h2>
+
+                <p>{stat.description}</p>
+              </article>
             );
           })}
-        </div>
-      </section>
+        </section>
 
-      <footer className="dashboard__footer">
-        ParkSaathi · Society Vehicle QR &amp; Privacy Management
-      </footer>
-    </div>
-  );
+        <section className="dashboard__section">
+          <div className="dashboard__section-header">
+            <div>
+              <h2>Recent Vehicle Registrations</h2>
+              <p>
+                Recently registered vehicles in your society.
+              </p>
+            </div>
 
+            <a
+              href="#vehicles"
+              className="dashboard__view-all"
+            >
+              View all <ArrowUpRight size={16} />
+            </a>
+          </div>
+
+          <div className="dashboard__table-wrapper">
+            <table className="dashboard__table">
+              <thead>
+                <tr>
+                  <th>VEHICLE NUMBER</th>
+                  <th>OWNER</th>
+                  <th>FLAT NUMBER</th>
+                  <th>QR STATUS</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {dashboardLoading ? (
+                  <tr>
+                    <td colSpan={4}>
+                      Loading recent registrations...
+                    </td>
+                  </tr>
+                ) : dashboardError ? (
+                  <tr>
+                    <td colSpan={4}>
+                      Unable to load recent registrations.
+                    </td>
+                  </tr>
+                ) : recentVehicles.length === 0 ? (
+                  <tr>
+                    <td colSpan={4}>
+                      No vehicles registered yet.
+                    </td>
+                  </tr>
+                ) : (
+                  recentVehicles.map((vehicle) => {
+                    const isQrActive =
+                      String(vehicle.qr_status || '').toLowerCase() ===
+                      'active';
+
+                    return (
+                      <tr
+                        key={
+                          vehicle.id ||
+                          vehicle.public_id ||
+                          vehicle.registration_number
+                        }
+                      >
+                        <td>
+                          <strong>
+                            {vehicle.registration_number || 'N/A'}
+                          </strong>
+                        </td>
+
+                        <td>
+                          {vehicle.resident_name || 'N/A'}
+                        </td>
+
+                        <td>
+                          {vehicle.flat_number || 'N/A'}
+                        </td>
+
+                        <td>
+                          <span
+                            className={`dashboard__status ${
+                              isQrActive
+                                ? 'dashboard__status--success'
+                                : 'dashboard__status--pending'
+                            }`}
+                          >
+                            {isQrActive ? 'Active' : 'Inactive'}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="dashboard__section dashboard__quick-actions">
+          <div className="dashboard__section-header">
+            <div>
+              <h2>Quick Actions</h2>
+              <p>
+                Access the main ParkSaathi features.
+              </p>
+            </div>
+          </div>
+
+          <div className="dashboard__actions-grid">
+            {quickActions.map((action) => {
+              const Icon = action.icon;
+
+              return (
+                <a
+                  className="dashboard__action-card"
+                  href={action.hash}
+                  key={action.label}
+                >
+                  <span className="dashboard__action-icon">
+                    <Icon size={22} />
+                  </span>
+
+                  <span className="dashboard__action-content">
+                    <strong>{action.label}</strong>
+                    <small>{action.description}</small>
+                  </span>
+
+                  <ArrowRight size={18} />
+                </a>
+              );
+            })}
+          </div>
+        </section>
+
+        <footer className="dashboard__footer">
+          ParkSaathi · Society Vehicle QR &amp; Privacy Management
+        </footer>
+      </div>
+    );
+  };
+
+  /**
+   * Render the selected application page.
+   */
   const renderPage = () => {
     switch (activeItem) {
       case 'vehicles':
@@ -343,7 +598,9 @@ function App() {
     }
   };
 
-  // Keep the QR scan page separate from the admin dashboard.
+  /**
+   * Keep the QR scan page separate from the admin dashboard.
+   */
   if (activeItem === 'scan-demo') {
     return (
       <>
@@ -413,9 +670,15 @@ function App() {
                 : 'Open navigation menu'
             }
             aria-expanded={sidebarOpen}
-            onClick={() => setSidebarOpen((open) => !open)}
+            onClick={() =>
+              setSidebarOpen((open) => !open)
+            }
           >
-            {sidebarOpen ? <X size={23} /> : <Menu size={23} />}
+            {sidebarOpen ? (
+              <X size={23} />
+            ) : (
+              <Menu size={23} />
+            )}
           </button>
 
           <span className="mobile-topbar__title">
@@ -441,7 +704,6 @@ function App() {
         containerStyle={{ zIndex: 99999 }}
         toastOptions={{
           duration: 3000,
-
           style: {
             borderRadius: '12px',
             padding: '14px 16px',
@@ -449,25 +711,21 @@ function App() {
             maxWidth: 'calc(100vw - 32px)',
             boxShadow: '0 8px 24px rgba(16, 24, 40, 0.12)',
           },
-
           success: {
             iconTheme: {
               primary: '#16a34a',
               secondary: '#ffffff',
             },
-
             style: {
               background: '#ecfdf3',
               color: '#067647',
             },
           },
-
           error: {
             iconTheme: {
               primary: '#dc2626',
               secondary: '#ffffff',
             },
-
             style: {
               background: '#fef3f2',
               color: '#b42318',
