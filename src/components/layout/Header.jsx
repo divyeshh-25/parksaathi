@@ -1,6 +1,7 @@
 import './Header.css';
+import { LogOut } from 'lucide-react';
 
-function Header({ pageTitle = 'Overview' }) {
+function Header({ pageTitle = 'Overview', onLogout }) {
   return (
     <header className="app-header">
       <div className="app-header__page-info">
@@ -14,7 +15,9 @@ function Header({ pageTitle = 'Overview' }) {
       </div>
 
       <div className="app-header__actions">
-        <span className="app-header__demo-badge">Demo Version</span>
+        <span className="app-header__demo-badge">
+          Demo Version
+        </span>
 
         <button
           type="button"
@@ -39,16 +42,32 @@ function Header({ pageTitle = 'Overview' }) {
           </svg>
         </button>
 
+        <button
+          type="button"
+          className="app-header__logout"
+          onClick={onLogout}
+          title="Logout from your admin account"
+        >
+          <LogOut size={17} />
+          <span>Logout</span>
+        </button>
+
         <div className="app-header__profile">
           <div className="app-header__avatar" aria-hidden="true">
             A
           </div>
 
           <div className="app-header__profile-info">
-            <span className="app-header__profile-name">Administrator</span>
-            <span className="app-header__profile-role">Demo Account</span>
+            <span className="app-header__profile-name">
+              Administrator
+            </span>
+            <span className="app-header__profile-role">
+              Demo Account
+            </span>
           </div>
         </div>
+
+      
       </div>
     </header>
   );

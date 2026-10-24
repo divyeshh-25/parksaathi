@@ -7,6 +7,7 @@ import residentsRouter from "./routes/residents.js";
 import vehiclesRouter from "./routes/vehicles.js";
 import privacySettingsRouter from "./routes/privacySettings.js";
 import { pool } from "./db.js";
+import authRouter from "./routes/auth.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,6 +42,7 @@ app.get("/api/health", async (req, res) => {
   }
 });
 
+app.use("/api/auth", authRouter);
 app.use("/api/residents", residentsRouter);
 app.use("/api/vehicles", vehiclesRouter);
 app.use("/api/privacy-settings", privacySettingsRouter);

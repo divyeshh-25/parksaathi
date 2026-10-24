@@ -22,6 +22,16 @@ import ScanDemo from './pages/ScanDemo.jsx';
 import QRCodes from './pages/QRCodes.jsx';
 import Residents from './pages/Residents.jsx';
 import PrivacySettings from './pages/PrivacySettings.jsx';
+import Login from './pages/Login.jsx';
+import MemberDashboard from './pages/MemberDashboard.jsx';
+import ChangePassword from './pages/ChangePassword.jsx';
+
+import {
+  getSession,
+  clearSession,
+  saveSession,
+  authFetch,
+} from './auth/auth.js';
 
 import './App.css';
 import './pages/Vehicles.css';
@@ -33,6 +43,7 @@ const pageTitles = {
   'qr-codes': 'QR Codes',
   'scan-demo': 'QR Scan Demo',
   settings: 'Privacy Settings',
+  member: 'My Profile',
 };
 
 const quickActions = [
@@ -63,21 +74,17 @@ const quickActions = [
 ];
 
 /**
- * Fetch JSON from the API.
- * Gives a useful error if the server returns HTML instead of JSON.
+ * Fetch JSON from the API using the saved JWT.
  */
 async function fetchJson(url) {
-  const response = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-    },
-  });
+  const response = await authFetch(url);
 
-  const contentType = response.headers.get('content-type') || '';
+  const contentType =
+    response.headers.get('content-type') || '';
 
   if (!contentType.includes('application/json')) {
     throw new Error(
-      `API returned a non-JSON response for ${url}. Check the Vercel API rewrite.`
+      `API returned a non-JSON response for ${url}. Check the API configuration.`,
     );
   }
 
@@ -85,20 +92,14 @@ async function fetchJson(url) {
 
   if (!response.ok || result?.success === false) {
     throw new Error(
-      result?.message || `Request failed: ${response.status}`
+      result?.message || `Request failed: ${response.status}`,
     );
   }
 
   return result;
 }
-
 /**
- * Extract an array from a common API response structure.
- *
- * Supported examples:
- * { success: true, data: [...] }
- * { data: { data: [...] } }
- * { vehicles: [...] }
+ * Extract arrays from common API response structures.
  */
 function extractArray(response, possibleKeys = []) {
   if (Array.isArray(response)) {
@@ -153,17 +154,24 @@ function extractPrivacySettings(response) {
   return response;
 }
 
-function App() {
-  const getActiveItem = () => {
-    const hash = window.location.hash
-      .replace(/^#\/?/, '')
-      .split('?')[0]
-      .toLowerCase();
+/**
+ * Read the current page from the URL hash.
+ * Query parameters are ignored when determining the page.
+ */
+function getActiveItem() {
+  const hash = window.location.hash
+    .replace(/^#\/?/, '')
+    .split('?')[0]
+    .toLowerCase();
 
-    return pageTitles[hash] ? hash : 'overview';
-  };
+  return pageTitles[hash] ? hash : 'overview';
+}
+
+function App() {
+  const [session, setSession] = useState(getSession);
 
   const [activeItem, setActiveItem] = useState(getActiveItem);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [dashboardData, setDashboardData] = useState({
@@ -176,35 +184,99 @@ function App() {
   const [dashboardError, setDashboardError] = useState('');
 
   /**
-   * Load dashboard information from the deployed API.
+   * Login callback.
+   * Login.jsx should pass the authenticated session to onLogin.
+   */
+  const handleLogin = (newSession) => {
+    if (!newSession) {
+      return;
+    }
+
+    setSession(newSession);
+
+    const role = String(newSession.role || '').toLowerCase();
+
+    window.location.hash =
+      role === 'admin' ? '#overview' : '#member';
+  };
+
+  const handlePasswordChanged = () => {
+    const currentSession = getSession();
+
+    if (!currentSession) {
+      setSession(null);
+      return;
+    }
+
+    const updatedSession = {
+      ...currentSession,
+      mustChangePassword: false,
+    };
+
+    saveSession(updatedSession);
+    setSession(updatedSession);
+
+    window.location.hash = '#member';
+  };
+
+  /**
+   * Logout callback.
+   */
+  const handleLogout = () => {
+    clearSession();
+    setSession(null);
+    setSidebarOpen(false);
+    window.location.hash = '#login';
+  };
+
+  /**
+   * Update the active page when the URL changes.
+   */
+  useEffect(() => {
+    const handleHashChange = () => {
+      setActiveItem(getActiveItem());
+      setSidebarOpen(false);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
+
+  /**
+   * Load dashboard information from the API.
    */
   useEffect(() => {
     let cancelled = false;
 
     const fetchDashboardData = async () => {
+      if (!session || session.role !== 'admin') {
+        return;
+      }
       setDashboardLoading(true);
       setDashboardError('');
 
       try {
-        const [vehiclesResponse, residentsResponse, privacyResponse] =
-          await Promise.all([
-            fetchJson('/api/vehicles'),
-            fetchJson('/api/residents'),
-            fetchJson('/api/privacy-settings'),
-          ]);
-
-        const vehicles = extractArray(vehiclesResponse, ['vehicles']);
-        const residents = extractArray(residentsResponse, ['residents']);
-        const privacySettings = extractPrivacySettings(privacyResponse);
+        const [
+          vehiclesResponse,
+          residentsResponse,
+          privacyResponse,
+        ] = await Promise.all([
+          fetchJson('/api/vehicles'),
+          fetchJson('/api/residents'),
+          fetchJson('/api/privacy-settings'),
+        ]);
 
         if (cancelled) {
           return;
         }
 
         setDashboardData({
-          vehicles,
-          residents,
-          privacySettings,
+          vehicles: extractArray(vehiclesResponse, ['vehicles']),
+          residents: extractArray(residentsResponse, ['residents']),
+          privacySettings: extractPrivacySettings(privacyResponse),
         });
       } catch (error) {
         console.error('Dashboard loading error:', error);
@@ -212,7 +284,7 @@ function App() {
         if (!cancelled) {
           setDashboardError(
             error.message ||
-              'Unable to load dashboard data. Please try again.'
+            'Unable to load dashboard data. Please try again.',
           );
         }
       } finally {
@@ -226,22 +298,6 @@ function App() {
 
     return () => {
       cancelled = true;
-    };
-  }, []);
-
-  /**
-   * Update the active page when the URL hash changes.
-   */
-  useEffect(() => {
-    const handleHashChange = () => {
-      setActiveItem(getActiveItem());
-      setSidebarOpen(false);
-    };
-
-    window.addEventListener('hashchange', handleHashChange);
-
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
 
@@ -298,10 +354,6 @@ function App() {
     return hasToken && isActive;
   }).length;
 
-  /**
-   * These settings are returned by the privacy-settings API.
-   * Support both snake_case and camelCase field names.
-   */
   const privacyMode =
     privacySettings?.privacy_mode ??
     privacySettings?.privacyMode ??
@@ -401,6 +453,7 @@ function App() {
             }}
           >
             <strong>Dashboard data could not be loaded.</strong>
+
             <p style={{ margin: '6px 0 0' }}>
               {dashboardError}
             </p>
@@ -438,6 +491,7 @@ function App() {
           <div className="dashboard__section-header">
             <div>
               <h2>Recent Vehicle Registrations</h2>
+
               <p>
                 Recently registered vehicles in your society.
               </p>
@@ -511,11 +565,10 @@ function App() {
 
                         <td>
                           <span
-                            className={`dashboard__status ${
-                              isQrActive
+                            className={`dashboard__status ${isQrActive
                                 ? 'dashboard__status--success'
                                 : 'dashboard__status--pending'
-                            }`}
+                              }`}
                           >
                             {isQrActive ? 'Active' : 'Inactive'}
                           </span>
@@ -533,6 +586,7 @@ function App() {
           <div className="dashboard__section-header">
             <div>
               <h2>Quick Actions</h2>
+
               <p>
                 Access the main ParkSaathi features.
               </p>
@@ -599,7 +653,8 @@ function App() {
   };
 
   /**
-   * Keep the QR scan page separate from the admin dashboard.
+   * Keep the QR scan page separate from the dashboard.
+   * QR scanning remains accessible without a dashboard login.
    */
   if (activeItem === 'scan-demo') {
     return (
@@ -611,34 +666,66 @@ function App() {
         <Toaster
           position="top-right"
           containerStyle={{ zIndex: 99999 }}
-          toastOptions={{
-            duration: 3000,
-            success: {
-              style: {
-                background: '#ecfdf3',
-                color: '#067647',
-              },
-            },
-            error: {
-              style: {
-                background: '#fef3f2',
-                color: '#b42318',
-              },
-            },
-          }}
+          toastOptions={{ duration: 3000 }}
         />
       </>
     );
   }
 
+  /**
+   * Show Login when the user has no session.
+   */
+  if (!session) {
+    return (
+      <>
+        <Login onLogin={handleLogin} />
+
+        <Toaster
+          position="top-right"
+          containerStyle={{ zIndex: 99999 }}
+          toastOptions={{ duration: 3000 }}
+        />
+      </>
+    );
+  }
+
+  /**
+   * Member portal.
+   */
+  if (String(session.role || '').toLowerCase() !== 'admin') {
+    return (
+        <>
+            {session.mustChangePassword ? (
+                <ChangePassword
+                    onPasswordChanged={handlePasswordChanged}
+                    onLogout={handleLogout}
+                />
+            ) : (
+              <MemberDashboard
+                session={session}
+                onLogout={handleLogout}
+              />
+            )}
+
+            <Toaster
+                position="top-right"
+                containerStyle={{ zIndex: 99999 }}
+                toastOptions={{ duration: 3000 }}
+            />
+        </>
+    );
+}
+
+  /**
+   * Admin dashboard.
+   */
   return (
     <div className="app">
       {/* Mobile sidebar overlay */}
       <button
         type="button"
-        className={`mobile-sidebar-overlay ${
-          sidebarOpen ? 'mobile-sidebar-overlay--visible' : ''
-        }`}
+        className={`mobile-sidebar-overlay ${sidebarOpen ? 'mobile-sidebar-overlay--visible' : ''
+          }`}
         aria-label="Close navigation menu"
         aria-hidden={!sidebarOpen}
         tabIndex={sidebarOpen ? 0 : -1}
@@ -647,9 +734,8 @@ function App() {
 
       {/* Sidebar drawer */}
       <div
-        className={`app-sidebar-wrapper ${
-          sidebarOpen ? 'app-sidebar-wrapper--open' : ''
-        }`}
+        className={`app-sidebar-wrapper ${sidebarOpen ? 'app-sidebar-wrapper--open' : ''
+          }`}
       >
         <Sidebar
           activeItem={activeItem}
@@ -670,9 +756,7 @@ function App() {
                 : 'Open navigation menu'
             }
             aria-expanded={sidebarOpen}
-            onClick={() =>
-              setSidebarOpen((open) => !open)
-            }
+            onClick={() => setSidebarOpen((open) => !open)}
           >
             {sidebarOpen ? (
               <X size={23} />
@@ -693,12 +777,14 @@ function App() {
           </span>
         </div>
 
-        <Header pageTitle={pageTitle} />
+        <Header
+          pageTitle={pageTitle}
+          onLogout={handleLogout}
+        />
 
         {renderPage()}
       </main>
 
-      {/* Global toast notifications */}
       <Toaster
         position="top-right"
         containerStyle={{ zIndex: 99999 }}

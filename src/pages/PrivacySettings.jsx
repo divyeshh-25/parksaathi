@@ -11,6 +11,7 @@ import {
   Save,
   LockKeyhole,
 } from 'lucide-react';
+import { authFetch } from '../auth/auth.js';
 
 import './PrivacySettings.css';
 
@@ -137,7 +138,7 @@ export default function PrivacySettings() {
 
     async function loadSettings() {
       try {
-        const response = await fetch('/api/privacy-settings', {
+        const response = await authFetch('/api/privacy-settings', {
           method: 'GET',
           signal: controller.signal,
         });
@@ -175,7 +176,7 @@ export default function PrivacySettings() {
     setSaving(true);
 
     try {
-      const response = await fetch('/api/privacy-settings', {
+      const response = await authFetch('/api/privacy-settings', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

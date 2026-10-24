@@ -11,6 +11,7 @@ import {
   CheckCircle2,
   Ban,
 } from 'lucide-react';
+import { authFetch } from '../auth/auth.js';
 import Swal from 'sweetalert2';
 import './Residents.css';
 
@@ -52,7 +53,7 @@ function Residents() {
 
     const loadResidents = async () => {
       try {
-        const response = await fetch('/api/residents', {
+        const response = await authFetch('/api/residents', {
           signal: controller.signal,
         });
 
@@ -212,7 +213,7 @@ function Residents() {
     try {
       const isEditing = editingId !== null;
 
-      const response = await fetch(
+      const response = await authFetch(
         isEditing
           ? `/api/residents/${editingId}`
           : '/api/residents',
@@ -316,7 +317,7 @@ function Residents() {
     if (!confirmation.isConfirmed) return;
 
     try {
-      const response = await fetch(
+      const response = await authFetch(
         `/api/residents/${resident.id}`,
         {
           method: 'PUT',

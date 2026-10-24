@@ -9,7 +9,7 @@ import {
   CarFront,
   ShieldCheck,
 } from 'lucide-react';
-
+import { authFetch } from '../auth/auth.js';
 import './QRCodes.css';
 
 function QRCodes() {
@@ -29,7 +29,7 @@ function QRCodes() {
         setLoading(true);
         setLoadError('');
 
-        const response = await fetch('/api/vehicles', {
+        const response = await authFetch('/api/vehicles', {
           signal: controller.signal,
         });
 

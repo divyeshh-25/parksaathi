@@ -343,3 +343,161 @@
         width: 100%;
     }
 }
+
+/* ==========================================
+   Default Temporary Password Information Card
+   ========================================== */
+
+   .residents-page__password-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 13px;
+    margin: 2px 0 20px;
+    padding: 16px;
+    border: 1px solid #d5e2ff;
+    border-radius: 14px;
+    background: linear-gradient(
+      135deg,
+      #f6f8ff 0%,
+      #edf3ff 100%
+    );
+    color: #243b63;
+  }
+  
+  .residents-page__password-note-icon {
+    display: grid;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid #dce7ff;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #285ee8;
+    box-shadow: 0 3px 8px rgb(37 83 170 / 7%);
+  }
+  
+  .residents-page__password-note-content {
+    min-width: 0;
+    flex: 1;
+  }
+  
+  .residents-page__password-note-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 1px 0 7px;
+    color: #183b83;
+    font-size: 13px;
+    font-weight: 750;
+    line-height: 1.5;
+  }
+  
+  .residents-page__password-note-badge {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #c9d9ff;
+    border-radius: 999px;
+    padding: 3px 8px;
+    background: #e4edff;
+    color: #2457bd;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+  }
+  
+  .residents-page__password-note-content > p {
+    margin: 0;
+    color: #586a87;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  
+  .residents-page__password-note-content > p strong {
+    color: #173b82;
+  }
+  
+  .residents-page__password-note-example {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 13px;
+    padding: 12px;
+    border: 1px solid #dce6f8;
+    border-radius: 10px;
+    background: rgb(255 255 255 / 85%);
+  }
+  
+  .residents-page__password-example-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  
+  .residents-page__password-example-item > span {
+    color: #7888a2;
+    font-size: 10px;
+    font-weight: 650;
+  }
+  
+  .residents-page__password-example-item code {
+    display: inline-block;
+    width: fit-content;
+    border: 1px solid #e0e7f1;
+    border-radius: 7px;
+    padding: 6px 8px;
+    background: #f8fafc;
+    color: #263b60;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+      Consolas, monospace;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.02em;
+  }
+  
+  .residents-page__password-note-arrow {
+    flex-shrink: 0;
+    color: #4c75d5;
+  }
+  
+  .residents-page__password-note-reminder {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin-top: 12px;
+    color: #4e6488;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  
+  .residents-page__password-note-reminder svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: #26835b;
+  }
+  
+  /* Responsive layout */
+  @media (max-width: 480px) {
+    .residents-page__password-note {
+      gap: 10px;
+      padding: 12px;
+    }
+  
+    .residents-page__password-note-icon {
+      flex-basis: 36px;
+      width: 36px;
+      height: 36px;
+    }
+  
+    .residents-page__password-note-example {
+      gap: 8px;
+      padding: 10px;
+    }
+  
+    .residents-page__password-example-item code {
+      font-size: 10px;
+    }
+  }

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { pool } from "../db.js";
+import { authenticateToken, requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 
@@ -49,7 +50,7 @@ router.get("/", async (req, res) => {
 
 // PUT /api/privacy-settings
 // Save global privacy settings
-router.put("/", async (req, res) => {
+router.put("/", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const input = req.body;
 

@@ -10,8 +10,8 @@ import {
   X,
   Pencil,
 } from 'lucide-react';
+import { authFetch } from '../auth/auth.js';
 import './Vehicles.css';
-
 const API_URL = '/api';
 
 const emptyForm = {
@@ -93,10 +93,10 @@ function Vehicles() {
       try {
         const [vehiclesResponse, residentsResponse] =
           await Promise.all([
-            fetch(`${API_URL}/vehicles`, {
+            authFetch(`${API_URL}/vehicles`, {
               signal: controller.signal,
             }),
-            fetch(`${API_URL}/residents`, {
+            authFetch(`${API_URL}/residents`, {
               signal: controller.signal,
             }),
           ]);
@@ -278,7 +278,7 @@ function Vehicles() {
     try {
       const isEditing = editingId !== null;
 
-      const response = await fetch(
+      const response = await authFetch(
         isEditing
           ? `${API_URL}/vehicles/${editingId}`
           : `${API_URL}/vehicles`,

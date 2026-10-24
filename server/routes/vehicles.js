@@ -1,6 +1,12 @@
 import { Router } from "express";
 import { randomUUID } from "node:crypto";
 import { pool } from "../db.js";
+import {
+  authenticateToken,
+  requireAdmin,
+  requireMember,
+  requirePasswordChanged,
+} from "../middleware/auth.js";
 
 const router = Router();
 
@@ -61,7 +67,7 @@ const validateVehicleFields = ({
 
 // GET /api/vehicles
 // Get all vehicles with resident details
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
       SELECT
@@ -98,9 +104,64 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /api/vehicles/mine
+// Return only the authenticated member's vehicles.
+router.get(
+  "/mine",
+  authenticateToken,
+  requireMember,
+  requirePasswordChanged,
+  async (req, res) => {
+    try {
+      const residentId = Number(req.user.id);
+
+      if (!Number.isSafeInteger(residentId) || residentId < 1) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid authentication session. Please log in again.",
+        });
+      }
+
+      const result = await pool.query(
+        `
+          SELECT
+            v.id,
+            v.public_id,
+            v.registration_number,
+            v.vehicle_type,
+            v.model,
+            v.resident_id,
+            v.qr_status,
+            v.created_at,
+            v.updated_at
+          FROM vehicles v
+          INNER JOIN residents r
+            ON r.id = v.resident_id
+          WHERE v.resident_id = $1
+            AND r.status = 'active'
+          ORDER BY v.id DESC
+        `,
+        [residentId]
+      );
+
+      return res.status(200).json({
+        success: true,
+        data: result.rows,
+      });
+    } catch (error) {
+      console.error("Get member vehicles error:", error.message);
+
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch your vehicles.",
+      });
+    }
+  }
+);
+
 // GET /api/vehicles/:id
 // Get a single vehicle
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -158,7 +219,7 @@ router.get("/:id", async (req, res) => {
 
 // POST /api/vehicles
 // Create vehicle and generate permanent UUIDs
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const {
       registration_number,
@@ -273,7 +334,7 @@ router.post("/", async (req, res) => {
 
 // PUT /api/vehicles/:id
 // Update vehicle without changing its permanent QR identity
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -391,7 +452,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE /api/vehicles/:id
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
 
