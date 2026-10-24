@@ -1,0 +1,97 @@
+{
+    "society": {
+        "id": "SOC001",
+        "name": "Green Residency",
+        "city": "Ahmedabad",
+        "state": "Gujarat"
+    },
+    "residents": [
+        {
+            "id": "RES001",
+            "name": "Amit Patel",
+            "mobile": "9999999999",
+            "flatNumber": "A-101",
+            "status": "active"
+        },
+        {
+            "id": "RES002",
+            "name": "Neha Shah",
+            "mobile": "9876543210",
+            "flatNumber": "A-102",
+            "status": "active"
+        },
+        {
+            "id": "RES003",
+            "name": "Rahul Mehta",
+            "mobile": "9123456780",
+            "flatNumber": "B-201",
+            "status": "active"
+        },
+        {
+            "id": "RES004",
+            "name": "Priya Desai",
+            "mobile": "9012345678",
+            "flatNumber": "B-202",
+            "status": "active"
+        },
+        {
+            "id": "RES005",
+            "name": "Karan Joshi",
+            "mobile": "9090909090",
+            "flatNumber": "C-301",
+            "status": "active"
+        }
+    ],
+    "vehicles": [
+        {
+            "id": "CAR001",
+            "number": "GJ01AB1234",
+            "type": "Car",
+            "brand": "Maruti Suzuki",
+            "model": "Baleno",
+            "residentId": "RES001",
+            "flatNumber": "A-101",
+            "qrEnabled": true
+        },
+        {
+            "id": "CAR002",
+            "number": "GJ01CD5678",
+            "type": "Car",
+            "brand": "Hyundai",
+            "model": "i20",
+            "residentId": "RES002",
+            "flatNumber": "A-102",
+            "qrEnabled": true
+        },
+        {
+            "id": "CAR003",
+            "number": "GJ01EF9012",
+            "type": "Car",
+            "brand": "Tata",
+            "model": "Nexon",
+            "residentId": "RES003",
+            "flatNumber": "B-201",
+            "qrEnabled": true
+        },
+        {
+            "id": "CAR004",
+            "number": "GJ01GH3456",
+            "type": "Car",
+            "brand": "Mahindra",
+            "model": "XUV300",
+            "residentId": "RES004",
+            "flatNumber": "B-202",
+            "qrEnabled": true
+        },
+        {
+            "id": "CAR005",
+            "number": "GJ01JK7890",
+            "type": "Car",
+            "brand": "Honda",
+            "model": "City",
+            "residentId": "RES005",
+            "flatNumber": "C-301",
+            "qrEnabled": true
+        }
+    ]
+}

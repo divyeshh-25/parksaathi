@@ -1,0 +1,529 @@
+/* =========================================
+   PARKSAATHI SIDEBAR — POLISHED DESIGN
+========================================= */
+
+.sidebar {
+  --sidebar-width: 15.5rem;
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 var(--sidebar-width);
+
+  width: var(--sidebar-width);
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  padding: 22px 14px;
+
+  color: var(--color-text, #101828);
+  background: var(--color-surface, #ffffff);
+
+  border-right: 1px solid var(--color-border, #e5e7eb);
+}
+
+/* =========================================
+   BRAND
+========================================= */
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-width: 0;
+  padding: 2px 6px 22px;
+  margin-bottom: 22px;
+
+  border-bottom: 1px solid #eaecf0;
+}
+
+.sidebar-brand-mark {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 13px;
+
+  color: #ffffff;
+  background: linear-gradient(145deg, #377dff, #2058db);
+
+  font-size: 19px;
+  font-weight: 800;
+
+  box-shadow: 0 5px 12px rgb(37 99 235 / 22%);
+}
+
+.sidebar-brand > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-brand-name,
+.sidebar-brand-subtitle {
+  margin: 0;
+  line-height: 1.35;
+}
+
+.sidebar-brand-name {
+  color: #101828;
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+.sidebar-brand-subtitle {
+  margin-top: 4px;
+
+  color: #98a2b3;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+}
+
+/* Close button */
+
+.sidebar-mobile-close {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 36px;
+  height: 36px;
+
+  padding: 0;
+
+  color: #667085;
+  background: #ffffff;
+
+  border: 1px solid #e4e7ec;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.sidebar-mobile-close:hover {
+  color: #101828;
+  background: #f2f4f7;
+  border-color: #d0d5dd;
+}
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+.sidebar nav {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.sidebar-nav li {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.sidebar-link {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+
+  padding: 11px 13px;
+
+  color: #667085;
+  background: transparent;
+
+  border: 1px solid transparent;
+  border-radius: 11px;
+
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1.4;
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.sidebar-link > span:not(.sidebar-icon) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sidebar-link:hover {
+  color: #1d2939;
+  background: #f5f7fb;
+  text-decoration: none;
+}
+
+.sidebar-link:active {
+  transform: scale(0.985);
+}
+
+.sidebar-link:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Active navigation */
+
+.sidebar-link.is-active {
+  color: #245fe8;
+  background: #edf3ff;
+  border-color: #e0eaff;
+  font-weight: 700;
+}
+
+.sidebar-link.is-active:hover,
+.sidebar-link.is-active:focus-visible {
+  color: #245fe8;
+  background: #e8f0ff;
+}
+
+/* Active indicator */
+
+.sidebar-link.is-active::before {
+  content: "";
+
+  position: absolute;
+  left: -1px;
+  top: 10px;
+  bottom: 10px;
+
+  width: 3px;
+
+  border-radius: 0 5px 5px 0;
+  background: #3478f6;
+}
+
+/* =========================================
+   NAVIGATION ICONS
+========================================= */
+
+.sidebar-icon {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 19px;
+  height: 19px;
+
+  color: currentColor;
+  opacity: 0.9;
+}
+
+/* Overview */
+
+.sidebar-icon--overview::before {
+  content: "";
+
+  position: absolute;
+  inset: 2px;
+
+  border: 1.7px solid currentColor;
+  border-radius: 4px;
+}
+
+.sidebar-icon--overview::after {
+  content: "";
+
+  position: absolute;
+  top: 6px;
+  left: 5px;
+
+  width: 8px;
+  height: 6px;
+
+  border-top: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+}
+
+/* Vehicles */
+
+.sidebar-icon--vehicles {
+  width: 20px;
+  height: 13px;
+
+  border: 1.7px solid currentColor;
+  border-radius: 5px;
+}
+
+.sidebar-icon--vehicles::before,
+.sidebar-icon--vehicles::after {
+  content: "";
+
+  position: absolute;
+  bottom: -3px;
+
+  width: 4px;
+  height: 4px;
+
+  border: 1.4px solid currentColor;
+  border-radius: 50%;
+
+  background: #ffffff;
+}
+
+.sidebar-icon--vehicles::before {
+  left: 2px;
+}
+
+.sidebar-icon--vehicles::after {
+  right: 2px;
+}
+
+/* Residents */
+
+.sidebar-icon--residents {
+  border: 0;
+}
+
+.sidebar-icon--residents::before {
+  content: "";
+
+  position: absolute;
+  top: 1px;
+
+  width: 7px;
+  height: 7px;
+
+  border: 1.6px solid currentColor;
+  border-radius: 50%;
+}
+
+.sidebar-icon--residents::after {
+  content: "";
+
+  position: absolute;
+  bottom: 1px;
+
+  width: 13px;
+  height: 7px;
+
+  border: 1.6px solid currentColor;
+  border-radius: 7px 7px 3px 3px;
+}
+
+/* QR Codes */
+
+.sidebar-icon--qr-codes {
+  border: 1.6px solid currentColor;
+  border-radius: 4px;
+
+  background:
+    linear-gradient(currentColor, currentColor) 3px 3px / 4px 4px no-repeat,
+    linear-gradient(currentColor, currentColor) calc(100% - 7px) 3px / 4px 4px no-repeat,
+    linear-gradient(currentColor, currentColor) 3px calc(100% - 7px) / 4px 4px no-repeat;
+}
+
+/* Settings */
+
+.sidebar-icon--settings {
+  border: 1.7px solid currentColor;
+  border-radius: 50%;
+}
+
+.sidebar-icon--settings::after {
+  content: "";
+
+  position: absolute;
+  inset: 4px;
+
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+
+/* QR Scan Demo */
+
+.sidebar-icon--scan-demo {
+  border: 1.7px solid currentColor;
+  border-radius: 4px;
+}
+
+.sidebar-icon--scan-demo::before {
+  content: "";
+
+  position: absolute;
+  inset: 4px;
+
+  border: 1.4px solid currentColor;
+  border-radius: 1px;
+}
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media screen and (min-width: 769px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    z-index: 1000;
+
+    width: 212px;
+    height: 100vh;
+    height: 100dvh;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .sidebar-mobile-close {
+    display: none !important;
+  }
+}
+
+/* =========================================
+   MOBILE DRAWER
+   App.css controls the slide animation.
+========================================= */
+
+@media screen and (max-width: 768px) {
+  /* Sidebar drawer */
+  .app-sidebar-wrapper {
+    display: block !important;
+    position: fixed !important;
+
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+
+    z-index: 1200 !important;
+
+    width: min(300px, 85vw) !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: #fff !important;
+    box-shadow: 12px 0 32px rgb(16 24 40 / 14%);
+
+    transform: translateX(-105%);
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+      transform 0.25s ease,
+      visibility 0.25s ease;
+  }
+
+  .app-sidebar-wrapper--open {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* Sidebar fills the drawer without additional offsets */
+  .app-sidebar-wrapper .sidebar {
+    position: absolute !important;
+    inset: 0 !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+
+    margin: 0 !important;
+    padding: 20px 14px !important;
+
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+
+    transform: none !important;
+
+    background: #fff !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Overlay covers the entire page viewport */
+  .mobile-sidebar-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+
+    z-index: 1100 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+
+    background: rgb(16 24 40 / 45%) !important;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .mobile-sidebar-overlay--visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* Main page must not reserve desktop sidebar space */
+  .app__main,
+  .app_main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-left: 0 !important;
+  }
+}
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-link,
+  .sidebar-mobile-close {
+    transition: none;
+  }
+}

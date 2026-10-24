@@ -1,0 +1,579 @@
+.ps-scan {
+    min-height: 100vh;
+    padding: 28px 18px;
+    background:
+        radial-gradient(circle at top right, #e7efff 0, transparent 35%),
+        #f5f7fb;
+    color: #172033;
+    font-family: inherit;
+}
+
+.ps-scan *,
+.ps-scan *::before,
+.ps-scan *::after {
+    box-sizing: border-box;
+}
+
+.ps-scan__container {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.ps-scan__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 42px;
+}
+
+.ps-scan__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.ps-scan__brand-icon {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border-radius: 14px;
+    background: #2563eb;
+    color: #fff;
+}
+
+.ps-scan__brand strong,
+.ps-scan__brand small {
+    display: block;
+}
+
+.ps-scan__brand strong {
+    font-size: 19px;
+    font-weight: 750;
+    letter-spacing: -0.4px;
+}
+
+.ps-scan__brand small {
+    margin-top: 4px;
+    color: #78849a;
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: 1.1px;
+}
+
+.ps-scan__secure {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border: 1px solid #dbe7ff;
+    border-radius: 30px;
+    background: #fff;
+    color: #2458bd;
+    font-size: 11px;
+    font-weight: 650;
+    white-space: nowrap;
+}
+
+.ps-scan__intro {
+    margin-bottom: 25px;
+}
+
+.ps-scan__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #3265cf;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 1px;
+}
+
+.ps-scan__intro h1 {
+    margin: 15px 0 12px;
+    color: #142039;
+    font-size: clamp(29px, 7vw, 39px);
+    font-weight: 780;
+    line-height: 1.15;
+    letter-spacing: -1.4px;
+}
+
+.ps-scan__intro>p {
+    margin: 0;
+    color: #69758a;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.ps-scan__vehicle {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 17px;
+    margin-bottom: 18px;
+    border: 1px solid #dfe7f4;
+    border-radius: 17px;
+    background: #fff;
+}
+
+.ps-scan__vehicle-icon {
+    display: grid;
+    width: 50px;
+    height: 50px;
+    flex: 0 0 50px;
+    place-items: center;
+    border-radius: 14px;
+    background: #edf3ff;
+    color: #2563eb;
+}
+
+.ps-scan__vehicle-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.ps-scan__vehicle-info span,
+.ps-scan__vehicle-info strong,
+.ps-scan__vehicle-info small {
+    display: block;
+}
+
+.ps-scan__vehicle-info span {
+    color: #8490a5;
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: 1px;
+}
+
+.ps-scan__vehicle-info strong {
+    margin: 6px 0;
+    color: #172033;
+    font-size: 19px;
+    overflow-wrap: anywhere;
+}
+
+.ps-scan__vehicle-info small {
+    color: #7a869a;
+    font-size: 11px;
+}
+
+.ps-scan__vehicle-check {
+    flex: 0 0 auto;
+    color: #16a36a;
+}
+
+.ps-scan__card {
+    padding: 25px;
+    border: 1px solid #e2e8f2;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 12px 36px rgb(30 52 90 / 5%);
+}
+
+.ps-scan__card-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 25px;
+}
+
+.ps-scan__heading-icon {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    place-items: center;
+    border-radius: 13px;
+    background: #edf3ff;
+    color: #2563eb;
+}
+
+.ps-scan__card-heading h2 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    font-weight: 750;
+    letter-spacing: -0.4px;
+}
+
+.ps-scan__card-heading p {
+    margin: 0;
+    color: #778399;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.ps-scan__label {
+    display: block;
+    margin-bottom: 9px;
+    color: #344158;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.ps-scan__phone-input {
+    display: flex;
+    min-height: 54px;
+    align-items: center;
+    gap: 12px;
+    padding: 0 15px;
+    border: 1px solid #d9e1ed;
+    border-radius: 12px;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ps-scan__phone-input:focus-within {
+    border-color: #3976ed;
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 10%);
+}
+
+.ps-scan__phone-input>span {
+    padding-right: 12px;
+    border-right: 1px solid #e1e6ef;
+    color: #47556c;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.ps-scan__phone-input input {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #172033;
+    font: inherit;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+}
+
+.ps-scan__phone-input input::placeholder {
+    color: #a0a9b8;
+    font-size: 13px;
+    letter-spacing: 0;
+}
+
+.ps-scan__hint {
+    margin: 10px 0 20px;
+    color: #8490a3;
+    font-size: 11px;
+    line-height: 1.65;
+}
+
+.ps-scan__button {
+    display: flex;
+    width: 100%;
+    min-height: 50px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 12px;
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.ps-scan__button:hover {
+    background: #1d4ed8;
+}
+
+.ps-scan__button:active {
+    transform: scale(0.99);
+}
+
+.ps-scan__button:focus-visible {
+    outline: 3px solid #a9c5ff;
+    outline-offset: 3px;
+}
+
+.ps-scan__button-arrow {
+    transform: rotate(180deg);
+}
+
+.ps-scan__button--secondary {
+    margin-top: 20px;
+    border: 1px solid #d9e2ef;
+    background: #fff;
+    color: #344158;
+}
+
+.ps-scan__button--secondary:hover {
+    background: #f5f8fc;
+}
+
+.ps-scan__privacy-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding-top: 18px;
+    margin: 20px 0 0;
+    border-top: 1px solid #edf0f5;
+    color: #718097;
+}
+
+.ps-scan__privacy-note svg {
+    flex: 0 0 auto;
+    margin-top: 2px;
+    color: #6b86b8;
+}
+
+.ps-scan__privacy-note p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.ps-scan__result-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    border-radius: 13px;
+}
+
+.ps-scan__result-banner>span {
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+}
+
+.ps-scan__result-banner h2 {
+    margin: 0 0 5px;
+    font-size: 15px;
+    font-weight: 750;
+}
+
+.ps-scan__result-banner p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.ps-scan__result-banner--success {
+    background: #eaf8f0;
+    color: #14764b;
+}
+
+.ps-scan__result-banner--public {
+    background: #edf4ff;
+    color: #2458bd;
+}
+
+.ps-scan__details-title {
+    margin: 25px 0 12px;
+    color: #344158;
+    font-size: 13px;
+    font-weight: 750;
+}
+
+.ps-scan__detail {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 16px 0;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.ps-scan__detail>svg {
+    flex: 0 0 auto;
+    color: #5376b5;
+}
+
+.ps-scan__detail div {
+    min-width: 0;
+}
+
+.ps-scan__detail span,
+.ps-scan__detail strong {
+    display: block;
+    overflow-wrap: anywhere;
+}
+
+.ps-scan__detail span {
+    margin-bottom: 5px;
+    color: #7a879a;
+    font-size: 11px;
+}
+
+.ps-scan__detail strong {
+    color: #202c40;
+    font-size: 14px;
+}
+
+.ps-scan__contact-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 13px;
+    border-radius: 12px;
+    background: #f5f7fb;
+    color: #65738a;
+}
+
+.ps-scan__contact-note svg {
+    flex: 0 0 auto;
+    margin-top: 2px;
+}
+
+.ps-scan__contact-note p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.ps-scan__no-details {
+    padding: 25px 12px;
+    text-align: center;
+    color: #7a879a;
+}
+
+.ps-scan__no-details svg {
+    margin-bottom: 10px;
+    color: #8b9ab1;
+}
+
+.ps-scan__no-details strong {
+    display: block;
+    color: #344158;
+    font-size: 14px;
+}
+
+.ps-scan__no-details p {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.ps-scan__error {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    margin-top: 16px;
+    border: 1px solid #ffd5d5;
+    border-radius: 14px;
+    background: #fff2f2;
+    color: #a42b2b;
+}
+
+.ps-scan__error>svg {
+    flex: 0 0 auto;
+}
+
+.ps-scan__error div {
+    min-width: 0;
+    flex: 1;
+}
+
+.ps-scan__error strong {
+    display: block;
+    font-size: 13px;
+}
+
+.ps-scan__error p {
+    margin: 6px 0 0;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.ps-scan__error button {
+    padding: 5px;
+    border: 0;
+    background: transparent;
+    color: #a42b2b;
+    cursor: pointer;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.ps-scan__center {
+    padding: 35px 25px;
+    text-align: center;
+}
+
+.ps-scan__state-icon {
+    display: inline-grid;
+    width: 60px;
+    height: 60px;
+    place-items: center;
+    border-radius: 18px;
+}
+
+.ps-scan__state-icon--error {
+    background: #fff0f0;
+    color: #d14343;
+}
+
+.ps-scan__center h1 {
+    margin: 18px 0 10px;
+    font-size: 25px;
+    letter-spacing: -0.6px;
+}
+
+.ps-scan__center p {
+    margin: 0;
+    color: #718097;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.ps-scan__footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 9px;
+    padding: 25px 8px 10px;
+    color: #8a95a7;
+    text-align: center;
+}
+
+.ps-scan__footer svg {
+    flex: 0 0 auto;
+    margin-top: 2px;
+}
+
+.ps-scan__footer span {
+    font-size: 10px;
+    line-height: 1.8;
+}
+
+@media (max-width: 480px) {
+    .ps-scan {
+        padding: 20px 15px;
+    }
+
+    .ps-scan__header {
+        margin-bottom: 32px;
+    }
+
+    .ps-scan__secure {
+        padding: 7px 8px;
+        font-size: 10px;
+    }
+
+    .ps-scan__card {
+        padding: 20px;
+        border-radius: 17px;
+    }
+
+    .ps-scan__vehicle {
+        padding: 14px;
+    }
+
+    .ps-scan__intro h1 {
+        letter-spacing: -0.9px;
+    }
+}
