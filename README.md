@@ -38,7 +38,7 @@ ParkOwnerQR is a QR-based vehicle identification and assistance platform designe
 **1. Clone the repository**
 
 ```bash
-git clone https://github.com/divyeshh-25/parksaathi.git
+git clone <your-repository-url>
 ```
 
 **2. Navigate to the project directory**
