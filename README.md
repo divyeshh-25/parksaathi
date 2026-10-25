@@ -1,8 +1,10 @@
-# 🚗 ParkSaathi
+# 🚗 ParkOwnerQR
 
 **Smart Vehicle Assistance for Residential Societies**
 
-ParkSaathi is a QR-based vehicle identification and assistance platform designed for residential societies. It helps people identify registered vehicles and facilitates communication with vehicle owners while respecting their privacy.
+ParkOwnerQR is a QR-based vehicle identification and assistance platform designed for residential societies. It helps people identify registered vehicles and facilitates communication with vehicle owners while respecting their privacy.
+
+**Tagline: Scan. Connect. Park Smarter.**
 
 ## ✨ Features
 
@@ -10,9 +12,9 @@ ParkSaathi is a QR-based vehicle identification and assistance platform designed
 - 👥 **Resident Management** — Manage resident information and account status.
 - 📱 **QR Code Generation** — Generate unique QR codes for individual vehicles.
 - 🔐 **Privacy Controls** — Control which vehicle and owner details are visible.
-- ✅ **Membership Verification** — Demo verification using registered resident mobile numbers.
-- 🛡️ **Privacy-Aware Scanning** — View vehicle information according to configured privacy settings.
-- 🚗 **Multiple Vehicles per Owner** — Designed to support multiple vehicles linked to one resident.
+- ✅ **Membership Verification** — Support resident verification flows.
+- 🛡️ **Privacy-Aware Scanning** — Display vehicle information according to configured privacy settings.
+- 🚗 **Multiple Vehicles per Owner** — Support multiple vehicles linked to one resident.
 
 ## 🛠️ Tech Stack
 
@@ -21,7 +23,8 @@ ParkSaathi is a QR-based vehicle identification and assistance platform designed
 - JavaScript
 - CSS
 - Lucide React
-- Browser Local Storage
+- Express API
+- Neon PostgreSQL
 
 ## 🚀 Getting Started
 
@@ -41,7 +44,7 @@ git clone <your-repository-url>
 **2. Navigate to the project directory**
 
 ```bash
-cd parksaathi
+cd <cloned-repository-directory>
 ```
 
 **3. Install dependencies**
@@ -65,10 +68,11 @@ npm run build
 ## 📂 Project Structure
 
 ```text
-parksaathi/
+project-root/
 ├── public/
 ├── src/
-│   ├── data/
+│   ├── auth/
+│   ├── components/
 │   ├── pages/
 │   ├── App.jsx
 │   ├── App.css
@@ -80,15 +84,9 @@ parksaathi/
 
 ## 🔒 Privacy & Security
 
-ParkSaathi is designed with resident privacy in mind. QR codes identify individual vehicles, while configurable privacy settings determine which information is displayed in the demo.
+ParkOwnerQR is designed with resident privacy in mind. QR codes identify individual vehicles, while configured privacy settings determine which information is displayed.
 
-**Current limitations:**
-- Data is stored in browser local storage.
-- Mobile verification is simulated and does not use OTP.
-- Backend authentication and authorization are not yet implemented.
-- Production deployment requires server-side verification and privacy enforcement.
-
-This project is currently under development and is not intended for handling sensitive resident information in production.
+Before using the platform with real resident information, verify that authentication, authorization, privacy enforcement, and server-side validation are correctly configured for your deployment.
 
 ## 🗺️ Roadmap
 
@@ -97,12 +95,9 @@ This project is currently under development and is not intended for handling sen
 - [x] QR code generation interface
 - [x] Privacy settings interface
 - [x] QR scan demonstration
-- [ ] Multiple vehicles per resident
 - [ ] Contact owner and urgent assistance workflows
-- [ ] Laravel backend and REST APIs
-- [ ] Authentication and authorization
-- [ ] Real OTP verification
 - [ ] Notifications and scan history
+- [ ] Further production hardening and verification flows
 
 ## 🎯 Vision
 
@@ -110,4 +105,4 @@ To make vehicle assistance in residential societies simpler, faster, and more pr
 
 ---
 
-**ParkSaathi** — Smarter vehicle assistance, with privacy in mind. 🚘
+**ParkOwnerQR** — Scan. Connect. Park Smarter. 🚘
