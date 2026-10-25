@@ -28,7 +28,7 @@ app.get("/api/health", async (req, res) => {
 
     res.json({
       success: true,
-      message: "ParkSaathi API is running",
+      message: "ParkOwnerQR API is running",
       database: "connected",
       databaseTime: result.rows[0].database_time,
     });
@@ -48,7 +48,7 @@ app.use("/api/vehicles", vehiclesRouter);
 app.use("/api/privacy-settings", privacySettingsRouter);
 
 const server = app.listen(PORT, () => {
-  console.log(`ParkSaathi API running on port ${PORT}`);
+  console.log(`ParkOwnerQR API running on port ${PORT}`);
 });
 
 async function shutdown() {

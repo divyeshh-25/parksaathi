@@ -435,7 +435,7 @@ function App() {
               SOCIETY OVERVIEW
             </span>
 
-            <h1>Welcome to ParkSaathi 👋</h1>
+            <h1>Welcome to ParkOwnerQR 👋</h1>
 
             <p>
               Manage society vehicles, QR codes, and owner privacy
@@ -600,7 +600,7 @@ function App() {
               <h2>Quick Actions</h2>
 
               <p>
-                Access the main ParkSaathi features.
+                Access the main ParkOwnerQR features.
               </p>
             </div>
           </div>
@@ -632,7 +632,7 @@ function App() {
         </section>
 
         <footer className="dashboard__footer">
-          ParkSaathi · Society Vehicle QR &amp; Privacy Management
+          ParkOwnerQR · Society Vehicle QR &amp; Privacy Management
         </footer>
       </div>
     );
@@ -781,7 +781,7 @@ function App() {
           </button>
 
           <span className="mobile-topbar__title">
-            ParkSaathi
+            ParkOwnerQR
           </span>
 
           <span

@@ -1,5 +1,5 @@
-const RESIDENTS_KEY = 'parksaathi_demo_residents';
-const VEHICLES_KEY = 'parksaathi_demo_vehicles';
+const RESIDENTS_KEY = 'parkownerqr_demo_residents';
+const VEHICLES_KEY = 'parkownerqr_demo_vehicles';
 
 const initialResidents = [
   {

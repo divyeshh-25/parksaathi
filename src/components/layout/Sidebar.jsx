@@ -65,7 +65,7 @@ function Sidebar({
         </span>
 
         <div>
-          <p className="sidebar-brand-name">ParkSaathi</p>
+          <p className="sidebar-brand-name">ParkOwnerQR</p>
           <p className="sidebar-brand-subtitle">SOCIETY PARKING</p>
         </div>
 

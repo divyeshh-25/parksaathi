@@ -310,10 +310,10 @@ function Residents() {
       cancelButtonColor: '#64748b',
 
       customClass: {
-        popup: 'parksaathi-swal-popup',
-        title: 'parksaathi-swal-title',
-        confirmButton: 'parksaathi-swal-confirm',
-        cancelButton: 'parksaathi-swal-cancel',
+        popup: 'parkownerqr-swal-popup',
+        title: 'parkownerqr-swal-title',
+        confirmButton: 'parkownerqr-swal-confirm',
+        cancelButton: 'parkownerqr-swal-cancel',
       },
     });
 

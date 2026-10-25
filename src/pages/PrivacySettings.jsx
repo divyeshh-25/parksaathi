@@ -236,7 +236,7 @@ export default function PrivacySettings() {
 
           <p>
             Control how vehicle and resident information is shared
-            through ParkSaathi.
+            through ParkOwnerQR.
           </p>
         </div>
 

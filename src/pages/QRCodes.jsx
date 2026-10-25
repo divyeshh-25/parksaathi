@@ -165,7 +165,7 @@ function QRCodes() {
     ctx.fillStyle = '#2563eb';
     ctx.font = 'bold 58px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('PARKSAATHI', 450, 115);
+    ctx.fillText('PARKOWNERQR', 450, 115);
 
     ctx.fillStyle = '#667085';
     ctx.font = '28px Arial';
@@ -200,7 +200,7 @@ function QRCodes() {
       const link = document.createElement('a');
 
       link.download =
-        `ParkSaathi-Sticker-${vehicle.number}.png`;
+        `ParkOwnerQR-Sticker-${vehicle.number}.png`;
 
       link.href = canvas.toDataURL('image/png');
       link.click();
@@ -240,7 +240,7 @@ function QRCodes() {
       <!doctype html>
       <html>
         <head>
-          <title>ParkSaathi QR - ${safeNumber}</title>
+          <title>ParkOwnerQR QR - ${safeNumber}</title>
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
           <style>
@@ -303,7 +303,7 @@ function QRCodes() {
 
         <body>
           <div class="sticker">
-            <div class="brand">PARKSAATHI</div>
+            <div class="brand">PARKOWNERQR</div>
             <p>Society Vehicle Identification</p>
 
             <img src="${image}" alt="Vehicle QR Code" />
@@ -520,7 +520,7 @@ function QRCodes() {
 
             <div className="qr-page__sticker">
               <span className="qr-page__brand">
-                PARKSAATHI
+                PARKOWNERQR
               </span>
 
               <h2>Vehicle QR Code</h2>

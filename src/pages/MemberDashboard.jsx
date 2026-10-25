@@ -196,7 +196,7 @@ function MemberDashboard({ session, onLogout }) {
       ctx.fillStyle = '#2563eb';
       ctx.font = 'bold 58px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText('PARKSAATHI', 450, 115);
+      ctx.fillText('PARKOWNERQR', 450, 115);
 
       ctx.fillStyle = '#667085';
       ctx.font = '28px Arial';
@@ -276,7 +276,7 @@ function MemberDashboard({ session, onLogout }) {
 
             link.href = objectUrl;
             link.download =
-              `ParkSaathi-Sticker-${safeRegistrationNumber}.png`;
+              `ParkOwnerQR-Sticker-${safeRegistrationNumber}.png`;
 
             document.body.appendChild(link);
             link.click();
@@ -336,7 +336,7 @@ function MemberDashboard({ session, onLogout }) {
           </span>
 
           <span>
-            <strong>ParkSaathi</strong>
+            <strong>ParkOwnerQR</strong>
             <small>MEMBER PORTAL</small>
           </span>
         </a>
@@ -548,7 +548,7 @@ function MemberDashboard({ session, onLogout }) {
           <ShieldCheck size={16} />
 
           <span>
-            ParkSaathi · Your privacy matters.
+            ParkOwnerQR · Your privacy matters.
           </span>
         </footer>
       </div>

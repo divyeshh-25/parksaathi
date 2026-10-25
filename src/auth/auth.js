@@ -1,4 +1,4 @@
-const AUTH_STORAGE_KEY = 'parksaathi_auth_session';
+const AUTH_STORAGE_KEY = 'parkownerqr_auth_session';
 
 export function getSession() {
   try {

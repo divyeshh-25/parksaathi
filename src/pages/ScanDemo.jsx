@@ -116,7 +116,7 @@ function ScanDemo() {
         async function loadVehicle() {
             if (!qrToken) {
                 setLoadError(
-                    'QR token missing. Please scan a valid ParkSaathi QR code.',
+                    'QR token missing. Please scan a valid ParkOwnerQR QR code.',
                 );
                 setLoading(false);
                 return;
@@ -280,7 +280,7 @@ function ScanDemo() {
                             </span>
 
                             <span>
-                                <strong>ParkSaathi</strong>
+                                <strong>ParkOwnerQR</strong>
                                 <small>VEHICLE ASSISTANCE</small>
                             </span>
                         </a>
@@ -314,7 +314,7 @@ function ScanDemo() {
                             </span>
 
                             <span>
-                                <strong>ParkSaathi</strong>
+                                <strong>ParkOwnerQR</strong>
                                 <small>VEHICLE ASSISTANCE</small>
                             </span>
                         </a>
@@ -343,7 +343,7 @@ function ScanDemo() {
                             type="button"
                         >
                             <ArrowLeft size={17} />
-                            Back to ParkSaathi
+                            Back to ParkOwnerQR
                         </button>
                     </section>
                 </div>
@@ -362,7 +362,7 @@ function ScanDemo() {
                             </span>
 
                             <span>
-                                <strong>ParkSaathi</strong>
+                                <strong>ParkOwnerQR</strong>
                                 <small>VEHICLE ASSISTANCE</small>
                             </span>
                         </a>
@@ -401,7 +401,7 @@ function ScanDemo() {
                         </span>
 
                         <span>
-                            <strong>ParkSaathi</strong>
+                            <strong>ParkOwnerQR</strong>
                             <small>VEHICLE ASSISTANCE</small>
                         </span>
                     </a>
@@ -534,7 +534,7 @@ function ScanDemo() {
 
                             <p>
                                 Your mobile number is checked by the
-                                ParkSaathi backend. Owner details are shown
+                                ParkOwnerQR backend. Owner details are shown
                                 according to privacy settings.
                             </p>
                         </div>
@@ -763,7 +763,7 @@ function ScanDemo() {
                     <ShieldCheck size={16} />
 
                     <span>
-                        ParkSaathi helps protect resident privacy.
+                        ParkOwnerQR helps protect resident privacy.
                         <br />
                         Vehicle and membership checks use the backend API.
                     </span>

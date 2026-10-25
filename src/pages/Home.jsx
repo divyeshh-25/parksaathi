@@ -24,7 +24,7 @@ const steps = [
         icon: Users,
         title: 'Register your vehicle',
         description:
-            'Your housing society registers residents and their vehicles on ParkSaathi.',
+            'Your housing society registers residents and their vehicles on ParkOwnerQR.',
     },
     {
         number: '02',
@@ -105,14 +105,14 @@ function Home() {
                 <a
                     className="ps-home__brand"
                     href="#home"
-                    aria-label="ParkSaathi home"
+                    aria-label="ParkOwnerQR home"
                     onClick={() => setMenuOpen(false)}
                 >
                     <span className="ps-home__brand-mark">
                         <CarFront size={23} strokeWidth={2.4} />
                     </span>
                     <span className="ps-home__brand-copy">
-                        <strong>ParkSaathi</strong>
+                        <strong>ParkOwnerQR</strong>
                         <small>SMARTER SOCIETY PARKING</small>
                     </span>
                 </a>
@@ -165,7 +165,7 @@ function Home() {
                         </h1>
 
                         <p className="ps-home__hero-text">
-                            ParkSaathi helps housing societies connect people with registered
+                            ParkOwnerQR helps housing societies connect people with registered
                             vehicle owners when a parked vehicle needs attention — using a
                             simple QR-based experience.
                         </p>
@@ -176,7 +176,7 @@ function Home() {
                                 className="ps-home__button ps-home__button--primary"
                                 onClick={openLogin}
                             >
-                                Explore ParkSaathi <ArrowRight size={18} />
+                                Explore ParkOwnerQR <ArrowRight size={18} />
                             </button>
                             <button
                                 type="button"
@@ -200,7 +200,7 @@ function Home() {
 
                     <div
                         className="ps-home__hero-art"
-                        aria-label="ParkSaathi vehicle QR illustration"
+                        aria-label="ParkOwnerQR vehicle QR illustration"
                     >
                         <div className="ps-home__art-orbit ps-home__art-orbit--one" />
                         <div className="ps-home__art-orbit ps-home__art-orbit--two" />
@@ -212,7 +212,7 @@ function Home() {
                                         <CarFront size={18} />
                                     </span>
                                     <span>
-                                        <strong>ParkSaathi</strong>
+                                        <strong>ParkOwnerQR</strong>
                                         <small>Vehicle identity</small>
                                     </span>
                                 </div>
@@ -388,7 +388,7 @@ function Home() {
 
                 <section
                     className="ps-home__proof-strip"
-                    aria-label="ParkSaathi benefits"
+                    aria-label="ParkOwnerQR benefits"
                 >
                     <div className="ps-home__proof-item">
                         <span className="ps-home__proof-icon">
@@ -426,7 +426,7 @@ function Home() {
                             Four steps to a <span>better parking experience.</span>
                         </h2>
                         <p>
-                            From registration to a scan, ParkSaathi makes the process easy
+                            From registration to a scan, ParkOwnerQR makes the process easy
                             to understand for residents and visitors alike.
                         </p>
                     </div>
@@ -468,7 +468,7 @@ function Home() {
                         <span className="ps-home__section-kicker">ONE PLACE TO MANAGE</span>
                         <h2>A clearer view of your society&apos;s vehicles.</h2>
                         <p>
-                            ParkSaathi brings vehicle records, resident information and QR
+                            ParkOwnerQR brings vehicle records, resident information and QR
                             management into a focused experience for authorized society
                             administrators.
                         </p>
@@ -496,7 +496,7 @@ function Home() {
 
                     <div
                         className="ps-home__dashboard-preview"
-                        aria-label="Illustrative ParkSaathi dashboard preview"
+                        aria-label="Illustrative ParkOwnerQR dashboard preview"
                     >
                         <div className="ps-home__preview-window">
                             <div className="ps-home__preview-sidebar">
@@ -654,7 +654,7 @@ function Home() {
                         </h2>
                         <p>
                             A parked vehicle may need attention, but its owner&apos;s personal
-                            information shouldn&apos;t be unnecessarily on display. ParkSaathi
+                            information shouldn&apos;t be unnecessarily on display. ParkOwnerQR
                             is designed to support a more considered way to identify a
                             registered vehicle and follow the available contact process.
                         </p>
@@ -679,7 +679,7 @@ function Home() {
 
                     <div className="ps-home__cta-content">
                         <span className="ps-home__cta-kicker">
-                            PARK SMARTER WITH PARKSAATHI
+                            SCAN. CONNECT. PARK SMARTER.
                         </span>
                         <h2>
                             A better parking experience
@@ -705,17 +705,17 @@ function Home() {
   <a
     className="ps-home__footer-brand"
     href="#home"
-    aria-label="ParkSaathi home"
+    aria-label="ParkOwnerQR home"
     onClick={() => setMenuOpen(false)}
   >
     <span className="ps-home__brand-mark">
       <CarFront size={21} />
     </span>
-    <strong>ParkSaathi</strong>
+    <strong>ParkOwnerQR</strong>
   </a>
 
   <p>
-    Smarter vehicle identification for connected communities.
+    Scan. Connect. Park Smarter.
   </p>
 
   <button type="button" onClick={openLogin}>
@@ -761,7 +761,7 @@ function Home() {
 
   <div className="ps-home__footer-bottom">
     <span>
-      © {new Date().getFullYear()} ParkSaathi. All rights reserved.
+      © {new Date().getFullYear()} ParkOwnerQR. All rights reserved.
     </span>
 
     <span className="ps-home__footer-tagline">

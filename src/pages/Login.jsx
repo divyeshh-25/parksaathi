@@ -152,13 +152,13 @@ function Login({ onLogin }) {
           </span>
 
           <span>
-            <strong>ParkSaathi</strong>
+            <strong>ParkOwnerQR</strong>
             <a
               href="/#home"
               rel="noopener noreferrer"
               className="ps-login__landing-link"
             >
-              SMART VEHICLE ASSISTANCE ↗
+              SCAN. CONNECT. PARK SMARTER. ↗
             </a>
           </span>
         </div>
@@ -197,7 +197,7 @@ function Login({ onLogin }) {
           </span>
 
           <span className="ps-login__form-eyebrow">
-            WELCOME TO PARKSAATHI
+            WELCOME TO PARKOWNERQR
           </span>
 
           <h2>Sign in to your account</h2>
