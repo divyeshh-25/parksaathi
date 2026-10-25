@@ -44,7 +44,7 @@ git clone https://github.com/divyeshh-25/parksaathi.git
 **2. Navigate to the project directory**
 
 ```bash
-cd parksaathi
+cd <cloned-repository-directory>
 ```
 
 **3. Install dependencies**
@@ -68,7 +68,7 @@ npm run build
 ## 📂 Project Structure
 
 ```text
-parksaathi/
+project-root/
 ├── public/
 ├── src/
 │   ├── auth/
