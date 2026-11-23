@@ -19,6 +19,25 @@ function Login({ onLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Fill demo credentials
+  const fillDemoCredentials = (demoRole) => {
+    setRole(demoRole);
+
+    if (demoRole === 'admin') {
+      setIdentifier('admin@parkowner.com');
+      setPassword('password');
+    } else {
+      setIdentifier('9157762508');
+      setPassword('password');
+    }
+
+    setShowPassword(false);
+
+    toast.success(
+      `${demoRole === 'admin' ? 'Admin' : 'Member'} credentials filled!`
+    );
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -92,8 +111,6 @@ function Login({ onLogin }) {
 
         userId,
 
-        // For member accounts, the resident ID is the
-        // authenticated resident's database ID.
         residentId:
           authenticatedRole === 'member'
             ? userId
@@ -265,8 +282,8 @@ function Login({ onLogin }) {
                 setIdentifier(
                   role === 'member'
                     ? event.target.value
-                      .replace(/\D/g, '')
-                      .slice(0, 10)
+                        .replace(/\D/g, '')
+                        .slice(0, 10)
                     : event.target.value
                 );
               }}
@@ -321,6 +338,29 @@ function Login({ onLogin }) {
 
               {!loading && <ArrowRight size={18} />}
             </button>
+
+            {/* Demo Login Buttons */}
+            <div className="ps-login__demo">
+              <span>Quick Demo Login</span>
+
+              <div className="ps-login__demo-buttons">
+                <button
+                  type="button"
+                  onClick={() => fillDemoCredentials('admin')}
+                  disabled={loading}
+                >
+                  Admin
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => fillDemoCredentials('member')}
+                  disabled={loading}
+                >
+                  Member
+                </button>
+              </div>
+            </div>
           </form>
 
           <div className="ps-login__security">

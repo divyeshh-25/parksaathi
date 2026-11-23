@@ -1074,3 +1074,44 @@
   color: #245bd4;
   text-decoration: underline;
 }
+
+.ps-login__demo {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.ps-login__demo > span {
+  display: block;
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+.ps-login__demo-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.ps-login__demo-buttons button {
+  flex: 1;
+  padding: 11px;
+  border: 1px solid #dce3ed;
+  border-radius: 8px;
+  background: #fff;
+  color: #263449;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ps-login__demo-buttons button:hover {
+  background: #f0f5ff;
+  border-color: #4779d9;
+  color: #315fc0;
+}
+
+.ps-login__demo-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
